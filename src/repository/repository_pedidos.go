@@ -15,7 +15,7 @@ func NovoRepositorioDePedido(db *sql.DB) *Pedido {
 
 //CriarPedido cria um novo pedido que contém itens dentro dele
 func (repositorio Pedido) CriarPedido(pedido model.Pedido) (uint64, error) {
-	statement, erro := repositorio.db.Prepare("insert into Pedido(numeroComanda, valorTotal) values (?,?)")
+	statement, erro := repositorio.db.Prepare("insert into Pedido(numeroComanda, valorTotal) values(?,?)")
 	if erro != nil {
 		return 0, erro
 	}
@@ -27,6 +27,9 @@ func (repositorio Pedido) CriarPedido(pedido model.Pedido) (uint64, error) {
 	}
 
 	ultimoIDInserido, erro := resultado.LastInsertId()
+	if erro != nil{
+		return 0, erro
+	}
 
 	return uint64(ultimoIDInserido), nil
 }

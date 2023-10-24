@@ -10,16 +10,17 @@ import (
 	"net/http"
 )
 
-func CriarPedidos(w http.ResponseWriter, r *http.Request) {
+func CriarItem(w http.ResponseWriter, r *http.Request) {
+
 	corpoRequest, erro := io.ReadAll(r.Body)
 	if erro != nil {
 		response.Erro(w, http.StatusUnprocessableEntity, erro)
 		return
 	}
 
-	var pedido model.Pedido
-	if erro = json.Unmarshal(corpoRequest, &pedido); erro != nil {
-		response.Erro(w, http.StatusUnprocessableEntity, erro)
+	var item model.Item
+	if erro = json.Unmarshal(corpoRequest, &item); erro != nil {
+		response.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
@@ -28,14 +29,13 @@ func CriarPedidos(w http.ResponseWriter, r *http.Request) {
 		response.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
-	defer db.Close()
 
-	repositorio := repository.NovoRepositorioDePedido(db)
-	PedidoCriado, erro := repositorio.CriarPedido(pedido)
+	repositorio := repository.NovoRepositorioDeItem(db)
+	ItemCriado, erro := repositorio.CriarItem(item)
 	if erro != nil {
 		response.Erro(w, http.StatusInternalServerError, erro)
 		return
 	}
 
-	response.JSON(w, http.StatusCreated, PedidoCriado)
+	response.JSON(w, http.StatusCreated, ItemCriado)
 }

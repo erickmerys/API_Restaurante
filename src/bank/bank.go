@@ -1,4 +1,4 @@
-package banck
+package bank
 
 import (
 	"database/sql"
